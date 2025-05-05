@@ -1,0 +1,186 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="socket.io.min.js"
+      integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
+    ></script>
+    <script src="axios.min.js"></script>
+  </head>
+  <body>
+    <div style="display: flex">
+      <div
+        style="
+          display: inline-block;
+          width: 30%;
+          background-color: bisque;
+          height: 100vh;
+        "
+        id="friends"
+      ></div>
+      <div
+        style="
+          display: inline-block;
+          width: 70%;
+          background-color: rgb(196, 255, 228);
+        "
+      >
+        <div style="height: 80vh" id="room"></div>
+        <div>
+          <input type="text" placeholder="Enter message" id="input" />
+          <button onclick="send()">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const ip = "localhost";
+      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTcxNjE0MTI2MSwiZXhwIjoxNzE4NzMzMjYxfQ.Ls2M-l1WPqdFoW2sz2EAjNTbAAPktVVkHD4WiLCApLk";
+      const taxi1socket = io("http://"+ip+":4001?EIO=4", {
+        transports: ["polling", "websocket"],
+        extraHeaders: {
+          authorization: token,
+        },
+      });
+
+      const friends = document.getElementById("friends");
+      const input = document.getElementById("input");
+      const room = document.getElementById("room");
+      let selectedRoom = "";
+
+      function send() {
+        const message = input.value;
+        sendMessage(message);
+      }
+
+      function subscribe(roomId) {
+        taxi1socket.emit("subscribe", {
+          room: roomId,
+        });
+      }
+
+      function unsubscribe(roomId) {
+        taxi1socket.emit("unsubscribe", {
+          room: roomId,
+        });
+      }
+
+      function clickRoom(roomId) {
+        if (selectedRoom.length > 0) {
+          unsubscribe(selectedRoom);
+        }
+        subscribe(roomId);
+        selectedRoom = roomId;
+        getMessages(roomId);
+      }
+
+      function sendMessage(message) {
+        axios
+          .post(
+            `http://${ip}:3000/api/v1/client/chat/messages/${selectedRoom}`,
+            {
+              message: message,
+            },
+            {
+              headers: {
+                accept: "application/json",
+                authorization: token,
+              },
+            }
+          )
+          .then((response) => {
+            getMessages(selectedRoom);
+            console.log(response.data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
+      function getFriends() {
+        let result = "";
+        fetch("http://"+ip+":3000/api/v1/client/chat/relation-users", {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+            authorization: token,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            Array.from(data.store).forEach((item, index) => {
+              const html = `<div style="cursor: pointer;background: red; padding: 12px;margin-top: 6px;" onclick="clickRoom('${item.roomId}')">
+                            <span><img src="${item.friend.image}" style="width:40px;"/><h3>${item.friend.name}</h3></span>
+                            <p>Unread: ${item.unReadMessagesCount} / ${item.friend.details.lastMessage}</p>
+                            </div>`;
+              result += html;
+              friends.innerHTML = result;
+            });
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      function getMessages(roomId) {
+        let result = "";
+        fetch(
+          "http://"+ip+":3000/api/v1/client/chat/messages/" + roomId,
+          {
+            method: "GET",
+            headers: {
+              accept: "application/json",
+              authorization: token,
+            },
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            Array.from(data.messages).forEach((item, index) => {
+              const html = `<div style="justify-content: ${
+                item.whoPosted == "user" ? "flex-end" : "flex-start"
+              };display:flex; width:100%;">
+                                <div style="background: green; padding:12px;border-radius: 12px;margin:12px;">
+                                    <h4>${item.message}</h4>
+                                    <p>${item.createdAt}</p>
+                                    </div>
+                                </div>`;
+              result += html;
+              room.innerHTML = result;
+            });
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      getFriends();
+
+      taxi1socket.on("connect", () => {
+        console.log("connected");
+      });
+
+      taxi1socket.on("connect_error", (err) => {
+        // the reason of the error, for example "xhr poll error"
+        console.log(err.message);
+
+        // some additional description, for example the status code of the initial HTTP response
+        console.log(err.description);
+
+        // some additional context, for example the XMLHttpRequest object
+        console.log(err.context);
+      });
+
+      taxi1socket.on("notification", (data) => {
+        console.log(data);
+      });
+
+      taxi1socket.on("subscribe", (data) => {
+        const payload = JSON.parse(data);
+        console.log(payload);
+      });
+      taxi1socket.on("message", (data) => {
+        getMessages(selectedRoom);
+        getFriends();
+      });
+    </script>
+  </body>
+</html>
