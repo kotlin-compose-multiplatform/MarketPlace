@@ -262,22 +262,29 @@ fun DetailsScreen(
                             }
 
 
-                                FavoriteButton(
-                                    id = product.id,
-                                    size = 40.dp,
-                                    shape = RoundedCornerShape(6.dp),
-                                    type = FavoriteType.PRODUCT,
-                                    modifier = Modifier.align(Alignment.TopEnd).background(
-                                        Color.Black.copy(alpha = 0.1f),
-                                        shape = RoundedCornerShape(6.dp)
-                                    )
-                                ) {
-                                    println("LIKE-0: ${product.id}")
-                                    favSettings.value.likeProduct(
-                                        product.id,
-                                        FavoriteType.PRODUCT
-                                    )
-                                }
+                                CheckAuthScreen(
+                                    successContent = {
+                                        FavoriteButton(
+                                            id = product.id,
+                                            size = 40.dp,
+                                            shape = RoundedCornerShape(6.dp),
+                                            type = FavoriteType.PRODUCT,
+                                            modifier = Modifier.align(Alignment.TopEnd).background(
+                                                Color.Black.copy(alpha = 0.1f),
+                                                shape = RoundedCornerShape(6.dp)
+                                            )
+                                        ) {
+                                            println("LIKE-0: ${product.id}")
+                                            favSettings.value.likeProduct(
+                                                product.id,
+                                                FavoriteType.PRODUCT
+                                            )
+                                        }
+                                    },
+                                    errorContent = {
+
+                                    }
+                                )
 
 
                             Row(
@@ -468,63 +475,64 @@ fun DetailsScreen(
 
                 }
 
-                CheckAuthScreen(
-                    successContent = {
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
 
-                            LoadingOutlinedButton(
-                                loading = createChatState.value.loading,
-                                onClick = {
-                                    chatViewModel.createChat(product.shopId ?: 0) {
-                                        globalRoute.value = globalRoute.value.copy(
-                                            homeRoute = Routes.Chats,
-                                            chatRoomId = it
-                                        )
-                                    }
-                                },
-                                shape = MaterialTheme.shapes.small,
-                                border = BorderStroke(1.dp, color = MaterialTheme.colorScheme.primary),
-                                modifier = Modifier
-                                    .height(60.dp)
-                                    .weight(1f)
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.chat_second),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = strings.writeMessage,
-                                    style = MaterialTheme.typography.bodyLarge.copy(
-                                        fontWeight = FontWeight.W500
-                                    ),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                            }
+                   CheckAuthScreen(
+                       successContent = {
+                           LoadingOutlinedButton(
+                               loading = createChatState.value.loading,
+                               onClick = {
+                                   chatViewModel.createChat(product.shopId ?: 0) {
+                                       globalRoute.value = globalRoute.value.copy(
+                                           homeRoute = Routes.Chats,
+                                           chatRoomId = it
+                                       )
+                                   }
+                               },
+                               shape = MaterialTheme.shapes.small,
+                               border = BorderStroke(1.dp, color = MaterialTheme.colorScheme.primary),
+                               modifier = Modifier
+                                   .height(60.dp)
+                                   .weight(1f)
+                           ) {
+                               Icon(
+                                   painter = painterResource(id = R.drawable.chat_second),
+                                   contentDescription = null,
+                                   tint = MaterialTheme.colorScheme.primary
+                               )
+                               Spacer(modifier = Modifier.width(8.dp))
+                               Text(
+                                   text = strings.writeMessage,
+                                   style = MaterialTheme.typography.bodyLarge.copy(
+                                       fontWeight = FontWeight.W500
+                                   ),
+                                   maxLines = 1,
+                                   overflow = TextOverflow.Ellipsis,
+                                   color = MaterialTheme.colorScheme.primary
+                               )
+                           }
+                       },
+                       errorContent = {
 
-
-                            BasketButton(
-                                text = strings.addToBasket,
-                                modifier = Modifier.weight(1f),
-                                initialCount = 0,
-                                productsEntity = product,
-                                viewModel = viewModel
-                            )
+                       }
+                   )
 
 
+                    BasketButton(
+                        text = strings.addToBasket,
+                        modifier = Modifier.weight(1f),
+                        initialCount = 0,
+                        productsEntity = product,
+                        viewModel = viewModel
+                    )
 
-                        }
-                    },
-                    errorContent = {
-                    }
-                )
+
+
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 

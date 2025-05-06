@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -38,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -210,6 +212,9 @@ fun CupertinoPhoneInput(
     val selectedRightPattern = rememberSaveable {
         mutableIntStateOf(0)
     }
+
+    val textFieldState = rememberTextFieldState(value.replaceFirst(selectedPattern.value, ""))
+
     Row(
         modifier.background(
             color = Color(0xFF767680).copy(alpha = 0.12f),
@@ -261,11 +266,11 @@ fun CupertinoPhoneInput(
             PhoneInputTextField(
                 modifier = Modifier.weight(85f),
                 config = rightPatterns[selectedRightPattern.intValue],
-                onValueChange = { newValue ->
-                    val nw = "${selectedPattern.value}$newValue"
-                    onChange(nw)
-                },
-                value = value.replaceFirst(selectedPattern.value, ""),
+//                onValueChange = { newValue ->
+//                    val nw = "${selectedPattern.value}$newValue"
+//                    onChange(nw)
+//                },
+                state = textFieldState,
             )
         }
 

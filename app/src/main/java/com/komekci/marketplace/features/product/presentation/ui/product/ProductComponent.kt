@@ -61,6 +61,7 @@ import com.komekci.marketplace.features.product.domain.model.ProductsEntity
 import com.komekci.marketplace.features.product.domain.model.sampleProduct
 import com.komekci.marketplace.features.product.domain.model.sampleProductWithoutDiscount
 import com.komekci.marketplace.features.product.presentation.viewmodel.CategoryViewModel
+import com.komekci.marketplace.ui.app.CheckAuthScreen
 import com.komekci.marketplace.ui.app.FavoriteButton
 import com.komekci.marketplace.ui.app.ImageLoader
 import com.primex.core.VerticalGrid
@@ -150,16 +151,23 @@ fun ProductComponent(
                         ),
                     contentScale = ContentScale.Crop
                 )
-                FavoriteButton(
-                    id = item.id,
-                    type = FavoriteType.PRODUCT,
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .offset(y = 2.dp, x = (-2).dp)
+                CheckAuthScreen(
+                    successContent = {
+                        FavoriteButton(
+                            id = item.id,
+                            type = FavoriteType.PRODUCT,
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .offset(y = 2.dp, x = (-2).dp)
 
-                ) {
-                    onFavoriteClick(item.id)
-                }
+                        ) {
+                            onFavoriteClick(item.id)
+                        }
+                    },
+                    errorContent = {
+
+                    }
+                )
 
                if(item.discount>0) {
                    Box(

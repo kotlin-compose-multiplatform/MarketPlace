@@ -10,8 +10,10 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -60,8 +62,17 @@ fun OnShopScreen(
         viewModel.getProducts()
     }
 
+    val listState = rememberLazyGridState()
+
+    LaunchedEffect(listState.canScrollForward.not()) {
+        if (productState.value.loading.not() && productState.value.hasMore) {
+            viewModel.getProducts()
+        }
+    }
+
 
     LazyVerticalGrid(
+        state = listState,
         modifier = Modifier
             .fillMaxWidth(),
         columns = GridCells.Fixed(2),
@@ -124,9 +135,7 @@ fun OnShopScreen(
             item(span = {
                 GridItemSpan(maxLineSpan)
             }) {
-                if(productState.value.loading.not() && productState.value.hasMore) {
-                    viewModel.getProducts()
-                }
+
                 if (productState.value.loading && productState.value.hasMore) {
                     AppLoading(
                         modifier = Modifier

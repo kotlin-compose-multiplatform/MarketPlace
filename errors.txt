@@ -1,0 +1,29 @@
+# ✅ Android Errors To-Do List
+
+- [x] Product pagination
+- [x] Product içine girip sebet goşup bilmeli (bez registrasiýasys hem)
+- [ ] Like işlenok
+- [x] OTP girizilýän input-da noly aýyrmaly
+- [ ] Register-da iki sany API ýüzlenýär: register (send code) we login — dev mode-da hem, React strict mode sebäpli iki gezek gidýär
+- [ ] Yza gaýdyp bilmek düwmesi işlenok (register/login)
+- [ ] Telefon input girizilende, sifr ortadan düzeltjek bolsam doly öçürmeli, haýsy sifr basylandygyny görkezýän çyzyk goýmaly
+- [ ] Dogry hasaplanmaly
+- [ ] Sebetde hiç zat ýok bolsa gapdalyndaky atributlary (totalPrice, products, etc.) görkezmesin
+- [ ] Harytlarymda discountPrice ýalňyş goýlan
+- [ ] Order-de telefon hat (başga sahypa girip çyksa) ýitýär
+- [ ] Orders içinde bahalar ýalňyş tegeleklenýär
+- [ ] Ulanyş düzgünlerde `Lorem Ipsum` bar
+- [ ] Ulanyş düzgünleri API-den çekilip alynmaly
+- [ ] Welaýatlarda `discountPrice` API-dakysy goýulmaly
+- [ ] Welaýatlarda "See All"
+- [ ] Welaýatlarda haryt ýok bolsa "Maglumat ýok" diýip çykmaly
+- [ ] Chat gelse notification görkezmeli (web-deki ýaly)
+- [ ] Chat okalsa ibermeli API (web-de)
+- [ ] Bez registrasiýa order edeniňde "name" derek `null` dur — bir serediň
+- [ ] Chat-back knopka işlenok
+- [ ] Baha ýazylanda iki sany nol gerek däl — eger ýazjak bolsa `.` goýmaly diýip validation goýmaly
+- [ ] Filter: brend goýmaly, filter saýlanyňda bug bar — products Swagger içini täzeden görüp geçiň, filter saýlasaň state saklansyn. Başga store girseň harytlar çykman galýar
+- [ ] Store-lary like edip bolmaýar
+- [ ] Halanlarymda bir haryt aýrylsa, ähli haryt gidýär — aýry-aýry tazeden çekip alynmaly
+- [ ] Product count dogrulanylmaly (store içine girilende)
+- [ ] Özüňizem täzeden gözden geçiriň

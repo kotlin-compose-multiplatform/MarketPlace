@@ -1,32 +1,41 @@
 package com.komekci.marketplace.ui.app
 
+import android.R.attr.text
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -35,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.komekci.marketplace.features.create_store.presentation.ui.CupertinoPhoneInput
 import com.komekci.marketplace.ui.theme.newTextColor
+import kotlinx.coroutines.delay
 
 @Preview(showSystemUi = true)
 @Composable
@@ -80,55 +90,50 @@ fun PhonePreview(modifier: Modifier = Modifier) {
 fun PhoneInputTextField(
     modifier: Modifier = Modifier,
     config: List<PhoneNumberElement>,
-    onValueChange: (String) -> Unit,
-    value: String,
+    state: TextFieldState,
 ) {
-    val editableDigitCount = remember {
-        config.filterIsInstance<PhoneNumberElement.EditableDigit>()
+    val focusManager = LocalFocusManager.current
+    val editableDigitIndices = remember(config) {
+        config.mapIndexedNotNull { index, element ->
+            index.takeIf { element is PhoneNumberElement.EditableDigit }
+        }
     }
+
     BasicTextField(
+        state = state,
         modifier = modifier,
-        value = value,
         textStyle = MaterialTheme.typography.bodyLarge.copy(
             fontSize = 17.sp,
             color = newTextColor
         ),
-        onValueChange = { newValue ->
-            if (newValue.length <= editableDigitCount.size) {
-                onValueChange(newValue)
-            }
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
-        ),
-        decorationBox = {
-            val digitIndexMap = remember(value) {
-                var start = 0
-                config.mapIndexedNotNull { index, it ->
-                    if (it is PhoneNumberElement.EditableDigit) {
-                        index to start++
-                    } else null
-                }.toMap()
-            }
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        decorator = { innerTextField ->
             Row(
-                modifier = Modifier,
-                verticalAlignment = Alignment.Top,
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(3.dp)
             ) {
-                config.forEachIndexed { index, phoneNumberElement ->
-                    when (phoneNumberElement) {
+                config.forEachIndexed { index, element ->
+                    when (element) {
+                        is PhoneNumberElement.Mask -> {
+                            Mask(text = element.text)
+                        }
                         PhoneNumberElement.EditableDigit -> {
-                            digitIndexMap[index]?.let { digitIndex ->
+                            val digitIndex = editableDigitIndices.indexOfFirst { it == index }
+                            if (digitIndex != -1) {
                                 EditableDigit(
-                                    text = value.getOrNull(digitIndex)?.toString(),
+                                    text = state.text.getOrNull(digitIndex)?.toString(),
+                                    isCursorVisible = state.selection.start == digitIndex,
+                                    onClick = {
+                                        state.edit {
+                                            // Fix: Set selection directly
+                                            val validPosition = digitIndex
+                                                .coerceIn(0, text.toString().length)
+                                            selection = TextRange(validPosition)
+                                        }
+                                        focusManager.moveFocus(FocusDirection.Previous)
+                                    }
                                 )
                             }
-                        }
-
-                        is PhoneNumberElement.Mask -> {
-                            Mask(
-                                text = phoneNumberElement.text,
-                            )
                         }
                     }
                 }
@@ -154,37 +159,64 @@ fun Mask(
 
 @Composable
 fun EditableDigit(
-    modifier: Modifier = Modifier,
     text: String?,
+    isCursorVisible: Boolean,
+    onClick: () -> Unit,
 ) {
-    Column(
-        modifier = modifier
-            .width(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        AnimatedContent(
-            targetState = text,
-            transitionSpec = {
-                (slideInVertically() + fadeIn())
-                    .togetherWith(slideOutVertically() + fadeOut())
+    var cursorVisible by remember { mutableStateOf(true) }
 
-            }, label = "animation"
-        ) { text ->
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = text ?: " ",
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = 18.sp,
-                ),
-                color = newTextColor
-            )
+    LaunchedEffect(isCursorVisible) {
+        if (isCursorVisible) {
+            while (true) {
+                cursorVisible = !cursorVisible
+                delay(500)
+            }
         }
+    }
 
-        HorizontalDivider(
-            thickness = 2.dp,
-            color = Color.LightGray
-        )
+    Box(
+        modifier = Modifier
+            .width(20.dp)
+            .clickable { onClick() }
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            AnimatedContent(
+                targetState = text,
+                transitionSpec = {
+                    (slideInVertically() + fadeIn())
+                        .togetherWith(slideOutVertically() + fadeOut())
+                },
+                label = ""
+            ) { text ->
+                Text(
+                    text = text ?: " ",
+                    fontSize = 18.sp,
+                    color = newTextColor
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+            ) {
+                if (isCursorVisible && cursorVisible) {
+                    Canvas(Modifier.fillMaxSize()) {
+                        drawLine(
+                            color = Color.Black,
+                            start = Offset(0f, 0f),
+                            end = Offset(size.width, 0f),
+                            strokeWidth = 2f
+                        )
+                    }
+                } else {
+                    HorizontalDivider(
+                        thickness = 2.dp,
+                        color = Color.LightGray
+                    )
+                }
+            }
+        }
     }
 }
 

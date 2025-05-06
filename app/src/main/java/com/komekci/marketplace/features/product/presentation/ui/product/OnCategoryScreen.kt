@@ -62,7 +62,9 @@ fun OnCategoryScreen(navHostController: NavHostController, state: CategoryState)
     }
 
     LaunchedEffect(listState.canScrollForward.not()) {
-        viewModel.getProducts()
+        if(productState.value.loading.not() && productState.value.hasMore) {
+            viewModel.getProducts()
+        }
     }
     Column(
         modifier = Modifier
@@ -154,9 +156,7 @@ fun OnCategoryScreen(navHostController: NavHostController, state: CategoryState)
                 item(span = {
                     GridItemSpan(maxLineSpan)
                 }) {
-                    if(productState.value.loading.not() && productState.value.hasMore) {
-                        viewModel.getProducts()
-                    }
+
                     if (productState.value.loading && productState.value.hasMore) {
                         AppLoading(
                             modifier = Modifier

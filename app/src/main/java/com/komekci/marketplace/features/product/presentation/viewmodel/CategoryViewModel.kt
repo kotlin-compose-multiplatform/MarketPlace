@@ -57,73 +57,60 @@ class CategoryViewModel @Inject constructor(
 
 
     fun getProducts() {
+        if (_products.value.loading || !hasMore) return
 
-
-        if (_products.value.loading || _products.value.hasMore.not())
-            return
-        var req = productRequest.value.copy(
-            size = 20,
-            page = productRequest.value.page + 1
-        )
-        if (req.page == 1) {
-            hasMore = true
-            _products.value = _products.value.copy(
-                products = emptyList()
-            )
-        }
-        Log.e("GET-PRODUCTS", hasMore.toString() + " / " + loading.not())
         viewModelScope.launch {
-            if (loading.not() && hasMore) {
-                userDataStore.getUserData {
-                    viewModelScope.launch {
-                        loading = true
-                        req = req.copy(
-                            token = it.token
-                        )
+            userDataStore.getUserData { user ->
+                viewModelScope.launch {
+                    if (loading) return@launch
+                    loading = true
 
-                        productRequest.value = req
-                        useCase.getProducts(req).onEach {
-                            when (it) {
-                                is Resource.Loading -> {
-                                    loading = true
-                                    _products.value = _products.value.copy(
-                                        loading = true,
-                                        error = it.message,
-                                        code = it.code,
-                                    )
+                    // Use current page without incrementing
+                    val req = productRequest.value.copy(token = user.token)
+
+                    useCase.getProducts(req).onEach { result ->
+                        when (result) {
+                            is Resource.Loading -> {
+                                _products.value = _products.value.copy(
+                                    loading = true,
+                                    error = result.message,
+                                    code = result.code,
+                                )
+                            }
+
+                            is Resource.Error -> {
+                                loading = false
+                                _products.value = _products.value.copy(
+                                    loading = false,
+                                    error = result.message,
+                                    code = result.code
+                                )
+                            }
+
+                            is Resource.Success -> {
+                                loading = false
+                                val currentPageData = result.data ?: emptyList()
+                                val newList = _products.value.products.orEmpty() + currentPageData
+
+                                // Determine if there are more pages
+                                hasMore = currentPageData.size >= req.size
+
+                                // Increment page only if current page has data
+                                if (currentPageData.isNotEmpty()) {
+                                    productRequest.value = req.copy(page = req.page + 1)
                                 }
 
-                                is Resource.Error -> {
-                                    loading = false
-                                    _products.value = _products.value.copy(
+                                _products.update { old ->
+                                    old.copy(
+                                        products = newList,
                                         loading = false,
-                                        error = it.message,
-                                        code = it.code
-                                    )
-                                }
-
-                                is Resource.Success -> {
-                                    loading = false
-                                    var list = it.data ?: emptyList()
-                                    _products.value.products?.let { old ->
-                                        list = old.plus(list)
-                                    }
-                                    hasMore = list.isNotEmpty()
-//                                    if(list.isEmpty()) {
-//                                        productRequest.value = productRequest.value.copy(
-//                                            page = productRequest.value.page.minus(1)
-//                                        )
-//                                    }
-                                    _products.value = _products.value.copy(
-                                        products = list,
-                                        loading = false,
-                                        error = it.message,
-                                        hasMore = list.isNotEmpty()
+                                        error = result.message,
+                                        hasMore = hasMore
                                     )
                                 }
                             }
-                        }.launchIn(this)
-                    }
+                        }
+                    }.launchIn(this)
                 }
             }
         }
