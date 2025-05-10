@@ -12,7 +12,7 @@ enum class OrderStatus(status: String) {
 
 @Keep
 data class OrderResponseItem(
-    val address: Address,
+    val address: Address? = null,
     val bank: Any,
     val createdAt: String,
     val description: String?,

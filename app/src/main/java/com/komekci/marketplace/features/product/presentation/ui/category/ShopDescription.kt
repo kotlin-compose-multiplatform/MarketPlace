@@ -176,7 +176,7 @@ fun ShopDescription(
     modifier: Modifier = Modifier,
     loading: Boolean = false,
     title: String,
-    countProducts: Int,
+    countProducts: String,
     logo: String,
     instagram: String? = null,
     tiktok: String? = null,

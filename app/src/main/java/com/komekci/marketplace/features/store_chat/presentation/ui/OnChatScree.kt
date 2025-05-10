@@ -127,7 +127,9 @@ fun StoreOnChatScreen(
                     modifier = Modifier
                         .size(32.dp)
                         .clip(CircleShape)
-                        .clickable { })
+                        .clickable {
+                            onBack()
+                        })
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = selectedRoom.value?.name ?: "",

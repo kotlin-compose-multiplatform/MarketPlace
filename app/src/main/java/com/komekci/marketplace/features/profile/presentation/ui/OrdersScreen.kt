@@ -180,7 +180,7 @@ fun OrdersScreen(
                     items(list.size) { index ->
                         val item = list[index]
                         OrderItem(
-                            address = "${item?.address?.address}",
+                            address = item.address?.address ?:item.user?.name?:"",
                             date = item.createdAt,//"21 ноября в 17:40",
                             status = item.status,
                             images = item.orderItems.map {

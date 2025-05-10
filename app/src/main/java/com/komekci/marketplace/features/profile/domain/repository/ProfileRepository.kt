@@ -4,6 +4,7 @@ import com.komekci.marketplace.core.Resource
 import com.komekci.marketplace.features.create_store.data.entity.store.StoreOrderStatus
 import com.komekci.marketplace.features.profile.data.entity.AddressResponse
 import com.komekci.marketplace.features.profile.data.entity.CreateAddressRequest
+import com.komekci.marketplace.features.profile.data.entity.PrivacyPolicyEntity
 import com.komekci.marketplace.features.profile.data.entity.SecondProfileEntity
 import com.komekci.marketplace.features.profile.data.entity.UpdateUser
 import com.komekci.marketplace.features.profile.data.entity.UpdateUserResponse
@@ -31,4 +32,5 @@ interface ProfileRepository {
     suspend fun deleteUserImage(token: String): Flow<Resource<String>>
     suspend fun getSingleOrder(token: String, id: String, guestId: String): Flow<Resource<SingleOrder>>
     suspend fun getStoreSingleOrder(token: String, id: String): Flow<Resource<SingleOrder>>
+    suspend fun getPrivacyPolicy(): Flow<Resource<PrivacyPolicyEntity>>
 }

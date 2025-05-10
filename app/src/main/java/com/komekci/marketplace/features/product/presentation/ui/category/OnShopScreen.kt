@@ -86,7 +86,7 @@ fun OnShopScreen(
             ShopDescription(
                 loading = createChatState.value.loading,
                 title = shopEntity?.title?:"",
-                countProducts = 2345,
+                countProducts = shopEntity?.totalProducts?:"0",
                 modifier = Modifier.fillMaxWidth(),
                 logo = shopEntity?.image?:"",
                 instagram = shopEntity?.instagram,

@@ -1,25 +1,31 @@
 package com.komekci.marketplace
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import cafe.adriel.lyricist.Lyricist
+import com.komekci.marketplace.core.NotificationHelper
 import com.komekci.marketplace.core.locale.Locales
 import com.komekci.marketplace.core.locale.Strings
-import com.komekci.marketplace.features.auth.data.local.AppLanguage
 import com.komekci.marketplace.features.auth.data.local.UserDataStore
 import com.komekci.marketplace.features.auth.presentation.viewmodel.UserViewModel
 import com.komekci.marketplace.features.product.data.entity.ProductRequest
-import com.komekci.marketplace.features.profile.presentation.viewmodel.ProfileViewModel
 import com.komekci.marketplace.state.AppSettingsState
 import com.komekci.marketplace.state.FavSettings
 import com.komekci.marketplace.state.LocalFavSettings
@@ -34,6 +40,7 @@ import com.komekci.marketplace.ui.theme.MarketPlaceTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private lateinit var lyricist: Lyricist<Strings>
@@ -42,6 +49,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
+            askNotificationPermission()
             MarketPlaceTheme {
                 val viewModel: UserDataStore = UserDataStore(this)
                 val coroutine = rememberCoroutineScope()
@@ -101,6 +109,44 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun askNotificationPermission() {
+        // This is only necessary for API level >= 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+//                Log.e(TAG, "PERMISSION_GRANTED")
+                // FCM SDK (and your app) can post notifications.
+            } else {
+//                Log.e(TAG, "NO_PERMISSION")
+                // Directly ask for the permission
+                requestPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            NotificationHelper.INSTANCE.sendNotification(
+                "Welcome to Komekchi",
+                "Your right hand in the trade!",
+                1
+            )
+            Toast.makeText(this, "Notifications permission granted", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            Toast.makeText(
+                this, "${getString(R.string.app_name)} can't post notifications without Notification permission",
+                Toast.LENGTH_LONG
+            ).show()
+
+        }
+    }
+
+
 }
 
 /*

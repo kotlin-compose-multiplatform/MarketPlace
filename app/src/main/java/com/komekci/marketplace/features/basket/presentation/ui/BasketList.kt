@@ -35,6 +35,7 @@ import com.komekci.marketplace.core.locale.translateValue
 import com.komekci.marketplace.features.basket.presentation.viewmodel.BasketViewModel
 import com.komekci.marketplace.features.home.presentation.ui.home.CupertinoScrollableSegmentedControl
 import com.komekci.marketplace.state.LocalRouteState
+import com.komekci.marketplace.ui.app.NoData
 import com.komekci.marketplace.ui.navigation.Routes
 import io.github.alexzhirkevich.cupertino.CupertinoSegmentedControl
 import io.github.alexzhirkevich.cupertino.CupertinoSegmentedControlTab
@@ -100,13 +101,15 @@ fun BasketList(navHostController: NavHostController) {
                             color = Color(0xFF0F1E3C)
                         )
 
-                        Text(
-                            text = "${products.value.size} ${strings.product}",
-                            style = MaterialTheme.typography.bodyLarge.copy(
-                                fontWeight = FontWeight.W400
-                            ),
-                            color = Color(0xFFA1A1AA)
-                        )
+                        if(stores.value.isNotEmpty()) {
+                            Text(
+                                text = "${products.value.size} ${strings.product}",
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    fontWeight = FontWeight.W400
+                                ),
+                                color = Color(0xFFA1A1AA)
+                            )
+                        }
                     }
                 }
 
@@ -160,16 +163,29 @@ fun BasketList(navHostController: NavHostController) {
                 }
 
                 item {
-                    TotalBasket(
-                        price = price.value,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .onGloballyPositioned {
-                                println("Global positioned: ${it.positionInParent().y}")
-                                positions.add(it.positionInParent().y)
-                            }
-                    ) {
-                        navHostController.navigate(Routes.BasketDetails.replace("{shopId}", selectedStore.intValue.toString()))
+
+                    if(stores.value.isNotEmpty()) {
+                        TotalBasket(
+                            price = price.value,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .onGloballyPositioned {
+                                    println("Global positioned: ${it.positionInParent().y}")
+                                    positions.add(it.positionInParent().y)
+                                }
+                        ) {
+                            navHostController.navigate(
+                                Routes.BasketDetails.replace(
+                                    "{shopId}",
+                                    selectedStore.intValue.toString()
+                                )
+                            )
+                        }
+                    } else {
+                        Column(Modifier.fillMaxWidth()) {
+                            Spacer(Modifier.height(40.dp))
+                            NoData(modifier = Modifier.fillMaxWidth())
+                        }
                     }
                 }
             }

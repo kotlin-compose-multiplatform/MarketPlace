@@ -4,6 +4,7 @@ import com.komekci.marketplace.core.Resource
 import com.komekci.marketplace.features.create_store.data.entity.store.StoreOrderStatus
 import com.komekci.marketplace.features.profile.data.entity.AddressResponse
 import com.komekci.marketplace.features.profile.data.entity.CreateAddressRequest
+import com.komekci.marketplace.features.profile.data.entity.PrivacyPolicyEntity
 import com.komekci.marketplace.features.profile.data.entity.SecondProfileEntity
 import com.komekci.marketplace.features.profile.data.entity.UpdateUser
 import com.komekci.marketplace.features.profile.data.entity.UpdateUserResponse
@@ -71,5 +72,8 @@ class ProfileUseCase(
     }
     suspend fun updateStoreOrder(token: String, orderId: String, request: StoreOrderStatus): Flow<Resource<Boolean>> {
         return profileRepository.updateStoreOrder(token, orderId, request)
+    }
+    suspend fun getPrivacyPolicy(): Flow<Resource<PrivacyPolicyEntity>> {
+        return profileRepository.getPrivacyPolicy()
     }
 }

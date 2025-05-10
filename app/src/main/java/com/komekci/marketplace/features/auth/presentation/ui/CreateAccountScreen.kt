@@ -1,5 +1,6 @@
 package com.komekci.marketplace.features.auth.presentation.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -66,6 +67,8 @@ fun CreateAccountScreen(onDone: () -> Unit = {}) {
     val globalRoute = LocalRouteState.current
     val countries = viewmodel.countryState
 
+
+
     LaunchedEffect(true) {
         viewmodel.getAllCountries()
     }
@@ -125,6 +128,9 @@ fun CreateAccountScreen(onDone: () -> Unit = {}) {
                             globalRoute.value = globalRoute.value.copy(
                                 mainRoute = Routes.LoginScreen
                             )
+                        },
+                        onBackClick = {
+                            onDone()
                         }
                     )
 
@@ -162,6 +168,10 @@ fun CreateAccountScreen(onDone: () -> Unit = {}) {
                }
            }
        }
+
+        BackHandler {
+            onDone()
+        }
     }
 }
 

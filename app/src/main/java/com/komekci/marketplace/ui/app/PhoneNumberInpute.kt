@@ -90,54 +90,60 @@ fun PhonePreview(modifier: Modifier = Modifier) {
 fun PhoneInputTextField(
     modifier: Modifier = Modifier,
     config: List<PhoneNumberElement>,
-    state: TextFieldState,
+    onValueChange: (String) -> Unit,
+    value: String,
 ) {
-    val focusManager = LocalFocusManager.current
-    val editableDigitIndices = remember(config) {
-        config.mapIndexedNotNull { index, element ->
-            index.takeIf { element is PhoneNumberElement.EditableDigit }
-        }
+    val editableDigitCount = remember {
+        config.filterIsInstance<PhoneNumberElement.EditableDigit>()
     }
-
     BasicTextField(
-        state = state,
         modifier = modifier,
+        value = value,
         textStyle = MaterialTheme.typography.bodyLarge.copy(
             fontSize = 17.sp,
             color = newTextColor
         ),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        decorator = { innerTextField ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(3.dp)
-            ) {
-                config.forEachIndexed { index, element ->
-                    when (element) {
-                        is PhoneNumberElement.Mask -> {
-                            Mask(text = element.text)
-                        }
-                        PhoneNumberElement.EditableDigit -> {
-                            val digitIndex = editableDigitIndices.indexOfFirst { it == index }
-                            if (digitIndex != -1) {
-                                EditableDigit(
-                                    text = state.text.getOrNull(digitIndex)?.toString(),
-                                    isCursorVisible = state.selection.start == digitIndex,
-                                    onClick = {
-                                        state.edit {
-                                            // Fix: Set selection directly
-                                            val validPosition = digitIndex
-                                                .coerceIn(0, text.toString().length)
-                                            selection = TextRange(validPosition)
-                                        }
-                                        focusManager.moveFocus(FocusDirection.Previous)
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
+        onValueChange = { newValue ->
+            if (newValue.length <= editableDigitCount.size) {
+                onValueChange(newValue)
             }
+        },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Number,
+        ),
+        decorationBox = {
+            it()
+//            val digitIndexMap = remember(value) {
+//                var start = 0
+//                config.mapIndexedNotNull { index, it ->
+//                    if (it is PhoneNumberElement.EditableDigit) {
+//                        index to start++
+//                    } else null
+//                }.toMap()
+//            }
+//            Row(
+//                modifier = Modifier,
+//                verticalAlignment = Alignment.Top,
+//                horizontalArrangement = Arrangement.spacedBy(3.dp)
+//            ) {
+//                config.forEachIndexed { index, phoneNumberElement ->
+//                    when (phoneNumberElement) {
+//                        PhoneNumberElement.EditableDigit -> {
+//                            digitIndexMap[index]?.let { digitIndex ->
+//                                EditableDigit(
+//                                    text = value.getOrNull(digitIndex)?.toString(),
+//                                )
+//                            }
+//                        }
+//
+//                        is PhoneNumberElement.Mask -> {
+//                            Mask(
+//                                text = phoneNumberElement.text,
+//                            )
+//                        }
+//                    }
+//                }
+//            }
         }
     )
 }

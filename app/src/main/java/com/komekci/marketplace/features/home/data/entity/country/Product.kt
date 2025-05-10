@@ -30,7 +30,7 @@ fun Product.toProductsEntity(): ProductsEntity {
         description_tm = description?.tm ?: "",
         description_ru = description?.ru ?: "",
         description_en = description?.en ?: "",
-        price = price?.toDouble() ?: 0.0,
+        price = if(discount!=null && discount>0) discountPrice?.toDoubleOrNull()?:0.0 else price?.toDouble() ?: 0.0,
         image = images,
         oldPrice = price?.toDouble() ?: 0.0, // Adjust logic for oldPrice if needed
         discount = discount?.toDouble() ?: 0.0,

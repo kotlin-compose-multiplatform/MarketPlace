@@ -20,6 +20,7 @@ import com.komekci.marketplace.features.profile.presentation.state.DeleteUserIma
 import com.komekci.marketplace.features.profile.presentation.state.OrdersState
 import com.komekci.marketplace.features.profile.presentation.state.PayWithKeyState
 import com.komekci.marketplace.features.profile.presentation.state.PaymentHistoryState
+import com.komekci.marketplace.features.profile.presentation.state.PrivacyPolicyState
 import com.komekci.marketplace.features.profile.presentation.state.SingleOrderState
 import com.komekci.marketplace.features.profile.presentation.state.UpdateOrderState
 import com.komekci.marketplace.features.profile.presentation.state.UpdateUserState
@@ -590,6 +591,37 @@ class ProfileViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    var privacyState = mutableStateOf(PrivacyPolicyState())
+        private set
+
+    fun getPrivacyPolicy() {
+        viewModelScope.launch {
+            useCase.getPrivacyPolicy().onEach {
+                when (it) {
+                    is Resource.Error -> {
+                        privacyState.value = privacyState.value.copy(
+                            loading = false,
+                            result = null
+                        )
+                    }
+                    is Resource.Loading -> {
+                        privacyState.value = privacyState.value.copy(
+                            loading = true,
+                            result = null
+                        )
+                    }
+                    is Resource.Success -> {
+                        privacyState.value = privacyState.value.copy(
+                            loading = false,
+                            result = it.data
+                        )
+                    }
+                }
+            }.launchIn(this)
+        }
+
     }
 
 

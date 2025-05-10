@@ -27,12 +27,12 @@ class AuthRepositoryImpl(
             val response = api.registerUser(body)
             if (response.isSuccessful) {
                 response.body()?.let {
-                    val isSent = api.sendCode(SendCodeRequest(it.userId))
-                    if (isSent.isSuccessful.not()) {
-                        emit(Resource.Error("Sent code error"))
-                    } else {
+//                    val isSent = api.sendCode(SendCodeRequest(it.userId))
+//                    if (isSent.isSuccessful.not()) {
+//                        emit(Resource.Error("Sent code error"))
+//                    } else {
                         emit(Resource.Success(response.body()))
-                    }
+//                    }
                 }
                 if (response.body() == null) {
                     emit(Resource.Error("Response body is empty"))

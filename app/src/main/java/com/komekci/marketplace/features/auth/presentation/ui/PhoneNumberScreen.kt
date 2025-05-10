@@ -244,6 +244,7 @@ fun PhoneNumberScreen(
         ) {
             Button(
                 onClick = {
+                    onBackClick()
                     back()
                 }, colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFF2F2F5)

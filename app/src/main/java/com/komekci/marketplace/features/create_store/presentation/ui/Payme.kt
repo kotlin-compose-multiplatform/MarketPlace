@@ -213,7 +213,7 @@ fun CupertinoPhoneInput(
         mutableIntStateOf(0)
     }
 
-    val textFieldState = rememberTextFieldState(value.replaceFirst(selectedPattern.value, ""))
+//    val textFieldState = rememberTextFieldState(value.replaceFirst(selectedPattern.value, ""))
 
     Row(
         modifier.background(
@@ -266,11 +266,11 @@ fun CupertinoPhoneInput(
             PhoneInputTextField(
                 modifier = Modifier.weight(85f),
                 config = rightPatterns[selectedRightPattern.intValue],
-//                onValueChange = { newValue ->
-//                    val nw = "${selectedPattern.value}$newValue"
-//                    onChange(nw)
-//                },
-                state = textFieldState,
+                onValueChange = { newValue ->
+                    val nw = "${selectedPattern.value}$newValue"
+                    onChange(nw)
+                },
+                value = value.replaceFirst(selectedPattern.value, ""),
             )
         }
 

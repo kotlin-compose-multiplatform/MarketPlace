@@ -3,6 +3,7 @@ package com.komekci.marketplace.features.profile.data.api
 import com.komekci.marketplace.features.create_store.data.entity.store.StoreOrderStatus
 import com.komekci.marketplace.features.profile.data.entity.AddressResponse
 import com.komekci.marketplace.features.profile.data.entity.CreateAddressRequest
+import com.komekci.marketplace.features.profile.data.entity.PrivacyPolicyEntity
 import com.komekci.marketplace.features.profile.data.entity.ProfileEntity
 import com.komekci.marketplace.features.profile.data.entity.SecondProfileEntity
 import com.komekci.marketplace.features.profile.data.entity.UpdateUserResponse
@@ -115,4 +116,7 @@ interface ProfileApi {
         @Header("store-authorization") token: String,
         @Path("orderId") orderId: String
     ): Response<SingleOrder?>
+
+    @GET("client/privacy")
+    suspend fun getPrivacyPolicy(): Response<PrivacyPolicyEntity?>
 }

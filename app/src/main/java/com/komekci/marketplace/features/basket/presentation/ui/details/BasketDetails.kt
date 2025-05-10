@@ -1,5 +1,6 @@
 package com.komekci.marketplace.features.basket.presentation.ui.details
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -60,6 +61,8 @@ import com.komekci.marketplace.features.profile.presentation.ui.AddressDialog
 import com.komekci.marketplace.features.profile.presentation.viewmodel.ProfileViewModel
 import com.komekci.marketplace.state.LocalGuestId
 import com.komekci.marketplace.state.LocalRouteState
+import com.komekci.marketplace.state.LocalSettings
+import com.komekci.marketplace.state.SetAppSettings
 import com.komekci.marketplace.ui.app.AppLoading
 import com.komekci.marketplace.ui.app.CheckAuthScreen
 import com.komekci.marketplace.ui.app.DashedDivider
@@ -97,10 +100,16 @@ fun BasketDetails(
     val addressViewModel: ProfileViewModel = hiltViewModel()
     val addressState = addressViewModel.address.collectAsState()
 
+    val appSettingsState = LocalSettings.current
+    val setAppSettings = SetAppSettings.current
+
     LaunchedEffect(true) {
+        setAppSettings(appSettingsState.copy(hideBottomNavigation = true))
         println("BASKET SHOP-1: $shopId")
         addressViewModel.getAddress()
     }
+
+
 
     val paymentType = rememberSaveable {
         mutableStateOf("card")
@@ -132,6 +141,8 @@ fun BasketDetails(
     val address = remember {
         mutableStateOf(false)
     }
+
+
 
     AddressDialog(
         open = openAddressDialog.value,
@@ -180,6 +191,15 @@ fun BasketDetails(
    }
 
 
+    fun back() {
+        navHostController.navigateUp()
+        setAppSettings(appSettingsState.copy(hideBottomNavigation = false))
+    }
+
+    BackHandler {
+        back()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -199,7 +219,7 @@ fun BasketDetails(
                     .size(34.dp)
                     .align(Alignment.TopStart)
                     .clip(CircleShape)
-                    .clickable { navHostController.navigateUp() }
+                    .clickable { back() }
             )
 
             Text(

@@ -2,28 +2,55 @@
 
 - [x] Product pagination
 - [x] Product içine girip sebet goşup bilmeli (bez registrasiýasys hem)
-- [ ] Like işlenok
+- [x] Like işlenok
 - [x] OTP girizilýän input-da noly aýyrmaly
-- [ ] Register-da iki sany API ýüzlenýär: register (send code) we login — dev mode-da hem, React strict mode sebäpli iki gezek gidýär
-- [ ] Yza gaýdyp bilmek düwmesi işlenok (register/login)
-- [ ] Telefon input girizilende, sifr ortadan düzeltjek bolsam doly öçürmeli, haýsy sifr basylandygyny görkezýän çyzyk goýmaly
-- [ ] Dogry hasaplanmaly
-- [ ] Sebetde hiç zat ýok bolsa gapdalyndaky atributlary (totalPrice, products, etc.) görkezmesin
-- [ ] Harytlarymda discountPrice ýalňyş goýlan
-- [ ] Order-de telefon hat (başga sahypa girip çyksa) ýitýär
-- [ ] Orders içinde bahalar ýalňyş tegeleklenýär
-- [ ] Ulanyş düzgünlerde `Lorem Ipsum` bar
-- [ ] Ulanyş düzgünleri API-den çekilip alynmaly
-- [ ] Welaýatlarda `discountPrice` API-dakysy goýulmaly
-- [ ] Welaýatlarda "See All"
-- [ ] Welaýatlarda haryt ýok bolsa "Maglumat ýok" diýip çykmaly
-- [ ] Chat gelse notification görkezmeli (web-deki ýaly)
-- [ ] Chat okalsa ibermeli API (web-de)
-- [ ] Bez registrasiýa order edeniňde "name" derek `null` dur — bir serediň
-- [ ] Chat-back knopka işlenok
+- [x] Ulanyş düzgünlerde `Lorem Ipsum` bar
+- [x] Ulanyş düzgünleri API-den çekilip alynmaly
+- [x] Sebetde hiç zat ýok bolsa gapdalyndaky atributlary (totalPrice, products, etc.) görkezmesin
+- [x] Chat gelse notification görkezmeli (web-deki ýaly)
+- [x] Bez registrasiýa order edeniňde "name" derek `null` dur — bir serediň
+- [x] Product count dogrulanylmaly (store içine girilende)
+- [x] Özüňizem täzeden gözden geçiriň
+- [x] Store-lary like edip bolmaýar
+- [x] Orders içinde bahalar ýalňyş tegeleklenýär
+- [x] Telefon input girizilende, sifr ortadan düzeltjek bolsam doly öçürmeli, haýsy sifr basylandygyny görkezýän çyzyk goýmaly
+- [x] Welaýatlarda `discountPrice` API-dakysy goýulmaly
+- [x] Order-de telefon hat (başga sahypa girip çyksa) ýitýär
+- [x] Register-da iki sany API ýüzlenýär: register (send code) we login — dev mode-da hem, React strict mode sebäpli iki gezek gidýär
+- [x] Yza gaýdyp bilmek düwmesi işlenok (register/login)
+- [x] Harytlarymda discountPrice ýalňyş goýlan
+- [x] Chat-back knopka işlenok
+
+- [?] Dogry hasaplanmaly
+- [API bermeli] Chat okalsa ibermeli API (web-de)
+- [?] Halanlarymda bir haryt aýrylsa, ähli haryt gidýär — aýry-aýry tazeden çekip alynmaly
 - [ ] Baha ýazylanda iki sany nol gerek däl — eger ýazjak bolsa `.` goýmaly diýip validation goýmaly
 - [ ] Filter: brend goýmaly, filter saýlanyňda bug bar — products Swagger içini täzeden görüp geçiň, filter saýlasaň state saklansyn. Başga store girseň harytlar çykman galýar
-- [ ] Store-lary like edip bolmaýar
-- [ ] Halanlarymda bir haryt aýrylsa, ähli haryt gidýär — aýry-aýry tazeden çekip alynmaly
-- [ ] Product count dogrulanylmaly (store içine girilende)
-- [ ] Özüňizem täzeden gözden geçiriň
+- [ ] Welaýatlarda "See All"
+- [ ] Welaýatlarda haryt ýok bolsa "Maglumat ýok" diýip çykmaly
+
+
+# ✅ Android Errors To-Do List
+- [?] Register-da iki sany API ýüzlenýär: register (send code) we login — dev mode-da hem, React strict mode sebäpli iki gezek gidýär.
+Men register edemde 2sany otp kod gelyar sizde 2sany request ugradulyar.login we send-code ,ya bolmasa register bolamda-da sheyle register we sendcode
+- [?] Yza gaýdyp bilmek düwmesi işlenok (register/login)
+Login/register field doldurylyan bolegi cykanson yza gaytmak knopka ishlemeyar.
+- [?] Dogry hasaplanmaly
+Dushnuksiz yazypdyryn, yagny orders harytlar sebede goshanymda yalnysh hasaplayan eken skidkalar bolanda. Son sol post eden orderimi sargytlarymdan gorenimde sol ikisinin bahasy dogry gelmeyar.
+- [?] Harytlarymda discountPrice ýalňyş goýlan
+Yalnyshmasam halanlarymda oydyan discountPrice ya bashga birr yerde hem discountprice api bilen dogry gelmeyar static goyup giden bolmagynyz hem mumkin.
+- [?] Order-de telefon hat (başga sahypa girip çyksa) ýitýär
+Order post-da adymy salgymy hat doldurylyan bolegi doldurup posot etman bashga page girsem menu etc yazan hatym yityar.
+- [?] Orders içinde bahalar ýalňyş tegeleklenýär
+Dushnuksiz yazypdyryn, yagny orders harytlar sebede goshanymda yalnysh hasaplayan eken skidkalar bolanda. Son sol post eden orderimi sargytlarymdan gorenimde sol ikisinin bahasy dogry gelmeyar.
+- [?] Ulanyş düzgünlerde `Lorem Ipsum` bar
+Ulanysh duzgunleri get api berseem cozulye sul
+- [API bermeli] Ulanyş düzgünleri API-den çekilip alynmaly
+Ugratyan.
+- [?] Welaýatlarda `discountPrice` API-dakysy goýulmaly
+Yurtlar ->TUrkmesnitan>Ashgabat -> discountPrice api-daky dogry gelmeyar.
+- [API bermeli] Chat okalsa ibermeli API (web-de)
+Ugratyan.
+- [?] Halanlarymda bir haryt aýrylsa, ähli haryt gidýär — aýry-aýry tazeden çekip alynmaly
+Dushnuksiz yazylypdyr halanlarymda register bolanson. Like ayrsym bir harytdan beylek I harytlardan page-dan yityar tazden halanlaryma girsem onki yiten halan harytlarm cykya.
+

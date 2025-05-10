@@ -6,6 +6,7 @@ import com.komekci.marketplace.features.create_store.data.entity.store.StoreOrde
 import com.komekci.marketplace.features.profile.data.api.ProfileApi
 import com.komekci.marketplace.features.profile.data.entity.AddressResponse
 import com.komekci.marketplace.features.profile.data.entity.CreateAddressRequest
+import com.komekci.marketplace.features.profile.data.entity.PrivacyPolicyEntity
 import com.komekci.marketplace.features.profile.data.entity.SecondProfileEntity
 import com.komekci.marketplace.features.profile.data.entity.UpdateUser
 import com.komekci.marketplace.features.profile.data.entity.UpdateUserResponse
@@ -373,6 +374,28 @@ class ProfileRepositoryImpl(
                 emit(Resource.Success(result.body()))
             } else {
                 println("[STORE_SINGLE_ORDER] ${result.code()}")
+                emit(
+                    Resource.Error(
+                        "Something went wrong",
+                        ErrorExtractor.extract(result.errorBody()),
+                        result.code()
+                    )
+                )
+            }
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            println("[STORE_SINGLE_ORDER] ${ex.localizedMessage}")
+            emit(Resource.Error(ex.localizedMessage, null, 500))
+        }
+    }
+
+    override suspend fun getPrivacyPolicy(): Flow<Resource<PrivacyPolicyEntity>> = flow {
+        emit(Resource.Loading())
+        try {
+            val result = api.getPrivacyPolicy()
+            if (result.isSuccessful) {
+                emit(Resource.Success(result.body()))
+            } else {
                 emit(
                     Resource.Error(
                         "Something went wrong",

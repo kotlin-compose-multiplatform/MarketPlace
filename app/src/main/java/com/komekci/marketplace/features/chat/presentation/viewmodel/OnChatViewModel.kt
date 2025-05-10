@@ -6,6 +6,7 @@ import androidx.compose.ui.util.fastAny
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.komekci.marketplace.core.NotificationHelper
 import com.komekci.marketplace.core.Resource
 import com.komekci.marketplace.core.common.Constant
 import com.komekci.marketplace.features.auth.data.local.UserDataStore
@@ -32,6 +33,7 @@ import kotlinx.coroutines.launch
 import java.io.StringReader
 import java.net.URI
 import javax.inject.Inject
+import kotlin.random.Random
 
 
 @HiltViewModel
@@ -167,6 +169,10 @@ class OnChatViewModel @Inject constructor(
     }
 
     fun upsertMessage(message: ChatHistoryModel) {
+
+        NotificationHelper.INSTANCE.sendNotification(message.message, message.message, Random.nextInt())
+
+
         _state.value.chats?.let { history ->
             if (history.fastAny { it.message == message.message && it.time == message.time }) {
                 Log.e("History", "Update")

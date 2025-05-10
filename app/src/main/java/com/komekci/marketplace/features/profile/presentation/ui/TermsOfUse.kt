@@ -17,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,14 +27,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.komekci.marketplace.LocalStrings
+import com.komekci.marketplace.features.profile.presentation.viewmodel.ProfileViewModel
+import com.komekci.marketplace.ui.app.AppLoading
 
 @Composable
 fun TermsOfUse(
     navHostController: NavHostController
 ) {
     val strings = LocalStrings.current
+
+    val profileViewModel: ProfileViewModel = hiltViewModel()
+    val state = profileViewModel.privacyState
+    LaunchedEffect(true) {
+        profileViewModel.getPrivacyPolicy()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -65,35 +77,35 @@ fun TermsOfUse(
 
         }
 
-        Text(
-            text = strings.termsOfUseShop, style = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.W700,
-                fontSize = 18.sp
-            ),
-            color = Color(0xFF1C2024),
-            modifier = Modifier,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
-        )
+        if(state.value.loading) {
+            AppLoading(Modifier.fillMaxSize())
+        } else {
+            state.value.result?.let {
+                Text(
+                    text = it.title?:"", style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.W700,
+                        fontSize = 18.sp
+                    ),
+                    color = Color(0xFF1C2024),
+                    modifier = Modifier,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
 
-        Text(
-            text = "Lorem ipsum dolor sit amet", style = MaterialTheme.typography.bodyMedium.copy(
-                fontWeight = FontWeight.W700
-            ),
-            color = Color(0xFF333333),
-            modifier = Modifier,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
-        )
 
-        Text(
-            text = "Lorem ipsum dolor sit amet consectetur. Duis non sapien ornare mattis nunc congue nisl et quam. Sodales sed gravida neque integer. Enim enim feugiat dictumst vehicula. Amet velit ut blandit egestas consectetur viverra. Imperdiet sed in tincidunt aenean. Neque dignissim non felis lorem elementum. Condimentum suspendisse iaculis duis tristique lacus consequat eget quis. Eu vulputate in amet iaculis nulla faucibus aliquam quis vestibulum. Consectetur eu urna convallis ac blandit congue.",
-            style = MaterialTheme.typography.bodySmall.copy(
-                fontWeight = FontWeight.W400
-            ),
-            color = Color(0xFF333333),
-            modifier = Modifier,
-        )
+
+                Text(
+                    text = it.text?:"",
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontWeight = FontWeight.W400
+                    ),
+                    color = Color(0xFF333333),
+                    modifier = Modifier,
+                )
+            }
+        }
+
+
 
     }
 }
