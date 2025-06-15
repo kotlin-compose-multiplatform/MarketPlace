@@ -76,6 +76,7 @@ import com.komekci.marketplace.state.LocalProductFilter
 import com.komekci.marketplace.state.LocalSettings
 import com.komekci.marketplace.ui.app.AppError
 import com.komekci.marketplace.ui.app.AppLoading
+import com.komekci.marketplace.ui.app.NoData
 import com.komekci.marketplace.ui.navigation.Routes
 import com.komekci.marketplace.ui.theme.MarketPlaceTheme
 import com.primex.core.VerticalGrid
@@ -305,28 +306,34 @@ fun HomeProducts(
                                onAllClick = {}
                            )
 
-                           LazyRow(
-                               Modifier.fillMaxWidth(),
-                               contentPadding = PaddingValues(horizontal = 16.dp),
-                               horizontalArrangement = Arrangement.spacedBy(12.dp)
-                           ) {
-                               items(stores.count()) { index->
-                                   ShopItem(
-                                       item = stores[index].toUiEntity(), modifier = Modifier
-                                           .width(172.dp),
-                                       onFavoriteClick = {
-                                       }
-                                   ) {
-                                       productFilter.value = productFilter.value.copy(
-                                           storeId = listOf(stores[index].id),
-                                           categoryId = emptyList(),
-                                           brandId = emptyList(),
-                                           catalogId = emptyList(),
-                                       )
-                                       navController.navigate(stores[index].toUiEntity()) {
-                                           launchSingleTop = true
+                           if(stores.isNotEmpty()) {
+                               LazyRow(
+                                   Modifier.fillMaxWidth(),
+                                   contentPadding = PaddingValues(horizontal = 16.dp),
+                                   horizontalArrangement = Arrangement.spacedBy(12.dp)
+                               ) {
+                                   items(stores.count()) { index->
+                                       ShopItem(
+                                           item = stores[index].toUiEntity(), modifier = Modifier
+                                               .width(172.dp),
+                                           onFavoriteClick = {
+                                           }
+                                       ) {
+                                           productFilter.value = productFilter.value.copy(
+                                               storeId = listOf(stores[index].id),
+                                               categoryId = emptyList(),
+                                               brandId = emptyList(),
+                                               catalogId = emptyList(),
+                                           )
+                                           navController.navigate(stores[index].toUiEntity()) {
+                                               launchSingleTop = true
+                                           }
                                        }
                                    }
+                               }
+                           } else {
+                               NoData(Modifier.fillMaxSize()) {
+                                   getData()
                                }
                            }
                        }
@@ -448,26 +455,26 @@ fun HomeProductSectionTitle(
             color = Color(0xFF0F1E3C)
         )
 
-        TextButton(
-            onClick = onAllClick
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = "See all",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF0F1E3C)
-                )
-
-                Icon(
-                    painter = painterResource(R.drawable.outword),
-                    tint = MaterialTheme.colorScheme.primary,
-                    contentDescription = "arrow"
-                )
-            }
-        }
+//        TextButton(
+//            onClick = onAllClick
+//        ) {
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically,
+//                horizontalArrangement = Arrangement.spacedBy(8.dp)
+//            ) {
+//                Text(
+//                    text = "See all",
+//                    style = MaterialTheme.typography.bodySmall,
+//                    color = Color(0xFF0F1E3C)
+//                )
+//
+//                Icon(
+//                    painter = painterResource(R.drawable.outword),
+//                    tint = MaterialTheme.colorScheme.primary,
+//                    contentDescription = "arrow"
+//                )
+//            }
+//        }
     }
 }
 

@@ -97,12 +97,13 @@ class FavoriteViewModel @Inject constructor(
                             }
 
                             is Resource.Success -> {
+                                val distinctProducts = result.data?.distinctBy { it.id } ?: emptyList()
                                 _favProducts.value = _favProducts.value.copy(
                                     loading = false,
                                     error = result.message,
                                     message = result.errorMessage,
                                     code = result.code,
-                                    data = result.data
+                                    data = distinctProducts
                                 )
                                 println("LIKEDD: ${result.data?.size}")
                             }

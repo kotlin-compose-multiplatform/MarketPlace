@@ -97,30 +97,30 @@ fun Favorites(
 
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+//        Spacer(modifier = Modifier.height(12.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            FavoriteTab(
-                title = strings.products,
-                modifier = Modifier.weight(1f),
-                selected = type.intValue == 0
-            ) {
-                type.intValue = 0
-            }
-            FavoriteTab(
-                title = strings.stores,
-                modifier = Modifier.weight(1f),
-                selected = type.intValue == 1
-            ) {
-                type.intValue = 1
-            }
-        }
+//        Row(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(horizontal = 16.dp),
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.spacedBy(8.dp)
+//        ) {
+//            FavoriteTab(
+//                title = strings.products,
+//                modifier = Modifier.weight(1f),
+//                selected = type.intValue == 0
+//            ) {
+//                type.intValue = 0
+//            }
+//            FavoriteTab(
+//                title = strings.stores,
+//                modifier = Modifier.weight(1f),
+//                selected = type.intValue == 1
+//            ) {
+//                type.intValue = 1
+//            }
+//        }
 
         Spacer(modifier = Modifier.height(12.dp))
 

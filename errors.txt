@@ -20,14 +20,15 @@
 - [x] Yza gaýdyp bilmek düwmesi işlenok (register/login)
 - [x] Harytlarymda discountPrice ýalňyş goýlan
 - [x] Chat-back knopka işlenok
+- [x] Dogry hasaplanmaly
+- [x] Chat okalsa ibermeli API (web-de)
+- [x] Halanlarymda bir haryt aýrylsa, ähli haryt gidýär — aýry-aýry tazeden çekip alynmaly
+- [x] Baha ýazylanda iki sany nol gerek däl — eger ýazjak bolsa `.` goýmaly diýip validation goýmaly
+- [x] Welaýatlarda "See All"
+- [x] Welaýatlarda haryt ýok bolsa "Maglumat ýok" diýip çykmaly
+- [x] Filter: brend goýmaly, filter saýlanyňda bug bar — products Swagger içini täzeden görüp geçiň, filter saýlasaň state saklansyn. Başga store girseň harytlar çykman galýar
 
-- [?] Dogry hasaplanmaly
-- [API bermeli] Chat okalsa ibermeli API (web-de)
-- [?] Halanlarymda bir haryt aýrylsa, ähli haryt gidýär — aýry-aýry tazeden çekip alynmaly
-- [ ] Baha ýazylanda iki sany nol gerek däl — eger ýazjak bolsa `.` goýmaly diýip validation goýmaly
-- [ ] Filter: brend goýmaly, filter saýlanyňda bug bar — products Swagger içini täzeden görüp geçiň, filter saýlasaň state saklansyn. Başga store girseň harytlar çykman galýar
-- [ ] Welaýatlarda "See All"
-- [ ] Welaýatlarda haryt ýok bolsa "Maglumat ýok" diýip çykmaly
+
 
 
 # ✅ Android Errors To-Do List

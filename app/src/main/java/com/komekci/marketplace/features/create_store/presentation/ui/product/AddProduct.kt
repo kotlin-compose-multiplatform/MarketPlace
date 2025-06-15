@@ -856,7 +856,7 @@ fun AddProduct(
                                 color = Color(0xFF344054)
                             )
                             OutlinedTextField(
-                                value = v.price?.toString()?:"0",
+                                value = if(v.price != null && v.price > 0) v.price.toString() else "0",
                                 colors = OutlinedTextFieldDefaults.colors(
                                     unfocusedBorderColor = Color(0x1C000030),
                                     focusedBorderColor = Color(0x1C000030),
@@ -897,7 +897,7 @@ fun AddProduct(
                                 color = Color(0xFF344054)
                             )
                             OutlinedTextField(
-                                value = v.discount.toString(),
+                                value = if(v.discount != null && v.discount > 0) v.discount.toString() else "0",
                                 colors = OutlinedTextFieldDefaults.colors(
                                     unfocusedBorderColor = Color(0x1C000030),
                                     focusedBorderColor = Color(0x1C000030),
